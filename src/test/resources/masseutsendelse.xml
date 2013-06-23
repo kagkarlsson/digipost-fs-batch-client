@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<masseutsendelse xmlns="http://www.digipost.no/xsd/avsender2_0">
+	<jobb-innstillinger>
+		<avsender-id>1000</avsender-id>
+		<jobb-id>jobb-id</jobb-id>
+		<jobb-navn>jobb-navn</jobb-navn>
+		<auto-godkjenn-jobb>false</auto-godkjenn-jobb>
+	</jobb-innstillinger>
+	<standard-distribusjon>
+		<post>
+			<dokument>
+				<id>dok-id1</id>
+				<fil>fil1.pdf</fil>
+				<innstillinger>
+					<emne>emne</emne>
+					<sms-varsling />
+					<autentiseringsnivaa>PASSORD</autentiseringsnivaa>
+					<sensitivitetsnivaa>NORMALT</sensitivitetsnivaa>
+				</innstillinger>
+			</dokument>
+			<dokument>
+				<id>dok-id2</id>
+				<fil>fil2.pdf</fil>
+				<innstillinger>
+					<emne>emne</emne>
+					<sms-varsling />
+					<autentiseringsnivaa>PASSORD</autentiseringsnivaa>
+					<sensitivitetsnivaa>NORMALT</sensitivitetsnivaa>
+				</innstillinger>
+			</dokument>
+		</post>
+		<forsendelser>
+			<brev>
+				<id>id1</id>
+				<mottaker>
+					<kunde-id>kunde-id1</kunde-id>
+					<foedselsnummer>01010112345</foedselsnummer>
+				</mottaker>
+				<innstillinger>
+					<emne>emne</emne>
+				</innstillinger>
+				<dokument>dok-id1</dokument>
+			</brev>
+			<brev>
+				<id>id2</id>
+				<mottaker>
+					<kunde-id>kunde-id2</kunde-id>
+					<foedselsnummer>02020212345</foedselsnummer>
+				</mottaker>
+				<innstillinger>
+					<emne>emne</emne>
+				</innstillinger>
+				<dokument>dok-id2</dokument>
+			</brev>
+		</forsendelser>
+	</standard-distribusjon>
+</masseutsendelse>
