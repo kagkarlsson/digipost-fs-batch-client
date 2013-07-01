@@ -1,4 +1,4 @@
-package no.bekk.java.sax;
+package no.bekk.java.dpostbatch.model;
 
 public class Brev {
 

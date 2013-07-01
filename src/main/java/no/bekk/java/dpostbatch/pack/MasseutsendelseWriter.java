@@ -1,9 +1,13 @@
-package no.bekk.java.sax;
+package no.bekk.java.dpostbatch.pack;
 
 import java.io.OutputStream;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
+
+import no.bekk.java.dpostbatch.model.BatchSettings;
+import no.bekk.java.dpostbatch.model.Brev;
+import no.bekk.java.dpostbatch.model.BrevProvider;
 
 import org.codehaus.staxmate.SMOutputFactory;
 import org.codehaus.staxmate.out.SMNamespace;
@@ -19,7 +23,7 @@ public class MasseutsendelseWriter {
 		this.indent = indent;
 	}
 
-	public void write(Settings settings, BrevProvider brevProvider, OutputStream destination) throws Exception {
+	public void write(BatchSettings settings, BrevProvider brevProvider, OutputStream destination) throws Exception {
 		SMOutputFactory outf = new SMOutputFactory(XMLOutputFactory.newInstance());
 		SMOutputDocument doc = outf.createOutputDocument(destination);
 		if (indent) {
@@ -38,7 +42,7 @@ public class MasseutsendelseWriter {
 		destination.flush();
 	}
 
-	private void addSettings(SMOutputElement root, SMNamespace namespace, Settings s) throws XMLStreamException {
+	private void addSettings(SMOutputElement root, SMNamespace namespace, BatchSettings s) throws XMLStreamException {
 		SMOutputElement settings = root.addElement(namespace, "jobb-innstillinger");
 		settings.addElementWithCharacters(namespace, "avsender-id", s.avsenderId);
 		settings.addElementWithCharacters(namespace, "jobb-id", s.jobbId);

@@ -1,4 +1,4 @@
-package no.bekk.java.sax;
+package no.bekk.java.dpostbatch.pack;
 
 import java.io.File;
 import java.io.FileOutputStream;

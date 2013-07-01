@@ -1,4 +1,4 @@
-package no.bekk.java.sax;
+package no.bekk.java.dpostbatch.pack;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.zip.ZipFile;
+
+import no.bekk.java.dpostbatch.pack.ZipBuilder;
 
 import org.junit.Before;
 import org.junit.Rule;

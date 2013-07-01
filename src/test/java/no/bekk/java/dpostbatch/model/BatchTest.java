@@ -1,8 +1,10 @@
-package no.bekk.java.sax;
+package no.bekk.java.dpostbatch.model;
 
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+
+import no.bekk.java.dpostbatch.model.Batch;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,7 +18,6 @@ public class BatchTest {
 	
 	@Before
 	public void setUp() {
-		
 	}
 	
 	@Test

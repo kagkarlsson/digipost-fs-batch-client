@@ -1,4 +1,4 @@
-package no.bekk.java.sax;
+package no.bekk.java.dpostbatch;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,4 +1,4 @@
-package no.bekk.java.sax;
+package no.bekk.java.dpostbatch.pack;
 
 
 import static org.junit.Assert.assertEquals;
@@ -17,6 +17,11 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import no.bekk.java.dpostbatch.model.BatchSettings;
+import no.bekk.java.dpostbatch.model.Brev;
+import no.bekk.java.dpostbatch.model.BrevProvider;
+import no.bekk.java.dpostbatch.pack.MasseutsendelseWriter;
+
 import org.codehaus.stax2.validation.XMLValidationSchema;
 import org.junit.Test;
 
@@ -29,7 +34,7 @@ public class MasseutsendelseWriterTest {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Brev b1 = new Brev("id1", "fil1.pdf", "emne", "kunde-id1", "01010112345");
 		Brev b2 = new Brev("id2", "fil2.pdf", "emne", "kunde-id2", "02020212345");
-		new MasseutsendelseWriter(true).write(new Settings("1000", "jobb-id", "jobb-navn", "false"),
+		new MasseutsendelseWriter(true).write(new BatchSettings("1000", "jobb-id", "jobb-navn", "false"),
 				new TestableBrevProvider(b1, b2), out);
 
 		String expected = CharStreams.toString(new InputStreamReader(getClass().getResourceAsStream("/masseutsendelse.xml")));
