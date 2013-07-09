@@ -32,15 +32,14 @@ public class MasseutsendelseWriterTest {
 	@Test
 	public void writeMasseutsendelse() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Brev b1 = new Brev("id1", "fil1.pdf", "emne", "kunde-id1", "01010112345");
-		Brev b2 = new Brev("id2", "fil2.pdf", "emne", "kunde-id2", "02020212345");
+		Brev b1 = new Brev("id1", "kunde-id1", "01010112345", "emne", "fil1.pdf");
+		Brev b2 = new Brev("id2", "kunde-id2", "02020212345", "emne", "fil2.pdf");
 		new MasseutsendelseWriter(true).write(new BatchSettings("1000", "jobb-id", "jobb-navn", "false"),
 				new TestableBrevProvider(b1, b2), out);
 
 		String expected = CharStreams.toString(new InputStreamReader(getClass().getResourceAsStream("/masseutsendelse.xml")));
 		
 		assertEquals(expected.replaceAll("\\s", ""), out.toString().replaceAll("\\s", ""));
-		System.out.println(out.toString());
 		assertTrue(validateXml(new ByteArrayInputStream(out.toByteArray())));
 	}
 	

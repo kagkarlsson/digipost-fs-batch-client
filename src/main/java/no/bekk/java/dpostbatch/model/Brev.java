@@ -9,7 +9,7 @@ public class Brev {
 	public String kundeId;
 
 	
-	public Brev(String id, String brevFil, String emne, String kundeId, String foedselsnummer) {
+	public Brev(String id, String kundeId, String foedselsnummer, String emne, String brevFil) {
 		this.id = id;
 		this.brevFil = brevFil;
 		this.emne = emne;

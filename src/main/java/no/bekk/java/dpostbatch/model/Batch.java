@@ -1,12 +1,16 @@
 package no.bekk.java.dpostbatch.model;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Batch {
 
 	public static final String BATCH_READY_FILE = "batch.ready";
+	private static final String BATCH_SETTINGS_FILE = "batch.properties";
 	private static final String LETTERS_FILE = "letters.csv";
+	private static final String BATCH_DESTINATION_XML = "masseutsendelse.xml";
+	private static final String BATCH_DESTINATION_ZIP = "batch.zip";
 	private Path batchDirectory;
 
 	public Batch(Path batchDirectory) {
@@ -36,6 +40,26 @@ public class Batch {
 	@Override
 	public String toString() {
 		return batchDirectory.toString();
+	}
+
+	public Path getSettingsFile() {
+		return batchDirectory.resolve(BATCH_SETTINGS_FILE);
+	}
+
+	public Path getDestinationXml() {
+		return batchDirectory.resolve(BATCH_DESTINATION_XML);
+	}
+
+	public Path getLettersCsv() {
+		return batchDirectory.resolve(LETTERS_FILE);
+	}
+
+	public Path getDirectory() {
+		return batchDirectory;
+	}
+
+	public Path getDestinationZip() {
+		return batchDirectory.resolve(BATCH_DESTINATION_ZIP);
 	}
 
 

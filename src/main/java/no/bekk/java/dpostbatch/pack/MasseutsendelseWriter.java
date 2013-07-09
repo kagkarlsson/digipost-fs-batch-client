@@ -23,7 +23,7 @@ public class MasseutsendelseWriter {
 		this.indent = indent;
 	}
 
-	public void write(BatchSettings settings, BrevProvider brevProvider, OutputStream destination) throws Exception {
+	public void write(BatchSettings settings, BrevProvider brevProvider, OutputStream destination) throws XMLStreamException  {
 		SMOutputFactory outf = new SMOutputFactory(XMLOutputFactory.newInstance());
 		SMOutputDocument doc = outf.createOutputDocument(destination);
 		if (indent) {
@@ -36,10 +36,11 @@ public class MasseutsendelseWriter {
 		addSettings(root, namespace, settings);
 		SMOutputElement standardDist = root.addElement(namespace, "standard-distribusjon");
 		addDocuments(standardDist, namespace, brevProvider);
-		addBrev(standardDist, namespace, brevProvider.reset());
+		
+		brevProvider.reset();
+		addBrev(standardDist, namespace, brevProvider);
 
 		doc.closeRoot();
-		destination.flush();
 	}
 
 	private void addSettings(SMOutputElement root, SMNamespace namespace, BatchSettings s) throws XMLStreamException {

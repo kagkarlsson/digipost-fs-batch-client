@@ -33,6 +33,7 @@ public class DigipostBatchClient {
 				new PackageBatchTask(batch).run();
 			}
 		}), 0, 10000);
+		
 	}
 	
 	public void stop() {

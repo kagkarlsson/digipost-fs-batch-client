@@ -7,6 +7,11 @@
 	<artifactId>digipost-batch-client</artifactId>
 	<version>0.1-SNAPSHOT</version>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<configFile>batch_client.properties</configFile>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.codehaus.woodstox</groupId>
@@ -56,4 +61,60 @@
 
 	</dependencies>
 
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-resources-plugin</artifactId>
+			<version>2.5</version>
+			<configuration>
+				<encoding>${project.build.sourceEncoding}</encoding>
+				<escapeWindowsPaths>false</escapeWindowsPaths>
+				<useDefaultDelimiters>false</useDefaultDelimiters>
+				<delimiters>
+					<delimiter>${*}</delimiter>
+				</delimiters>
+			</configuration>
+			<executions>
+				<execution>
+					<id>copy-test-resources-config</id>
+					<phase>process-resources</phase>
+					<goals>
+						<goal>copy-resources</goal>
+					</goals>
+					<configuration>
+						<outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
+						<resources>
+							<resource>
+								<directory>src/test/resources</directory>
+								<filtering>true</filtering>
+								<includes>
+									<include>**/*.properties</include>
+								</includes>
+							</resource>
+						</resources>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>exec-maven-plugin</artifactId>
+			<version>1.2.1</version>
+			<configuration>
+				<mainClass>no.bekk.java.dpostbatch.DigipostBatchClient</mainClass>
+				<includePluginDependencies>true</includePluginDependencies>
+				<systemProperties>
+					<systemProperty>
+						<key>configFile</key>
+						<value>${configFile}</value>
+					</systemProperty>
+				</systemProperties>
+				<environmentVariables>
+					<java.security.egd>file:/dev/./urandom</java.security.egd>
+					<file.encoding>UTF-8</file.encoding>
+				</environmentVariables>
+			</configuration>
+		</plugin>
+
+	</plugins>
 </project>
