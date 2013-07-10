@@ -78,9 +78,8 @@ public class MasseutsendelseWriterTest {
 			}
 		}
 
-		public BrevProvider reset() {
+		public void reset() {
 			counter = 0;
-			return this;
 		}
 
 	}
