@@ -1,8 +1,0 @@
-
-sftp client
- - how to test (mock it on local file system)
-
-receipt parsing (stax)
-
-local database for storing results
- - http://www.mapdb.org/ (because of restrictiveness of berkeleydb

@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import javax.xml.stream.XMLStreamException;
 
 import no.bekk.java.dpostbatch.model.Batch;
+import no.bekk.java.dpostbatch.model.BatchLogger;
 import no.bekk.java.dpostbatch.model.BatchSettings;
 import no.bekk.java.dpostbatch.model.Brev;
 import no.bekk.java.dpostbatch.model.SettingsProvider;
@@ -15,14 +16,13 @@ import no.bekk.java.dpostbatch.pack.CSVBrevProvider;
 import no.bekk.java.dpostbatch.pack.MasseutsendelseWriter;
 import no.bekk.java.dpostbatch.pack.ZipBuilder;
 
-public class PackageBatchTask {
+public class PackageBatchTask extends BatchTask {
 
 	private Batch batch;
 	private SettingsProvider settingsProvider;
 
-	public PackageBatchTask(Batch batch, SettingsProvider settingsProvider) {
-		this.batch = batch;
-		this.settingsProvider = settingsProvider;
+	public PackageBatchTask(Batch batch, SettingsProvider settingsProvider, BatchLogger logger) {
+		super(batch, settingsProvider, logger);
 	}
 
 	public void run() {

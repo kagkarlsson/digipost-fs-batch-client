@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import no.bekk.java.dpostbatch.model.Batch;
+import no.bekk.java.dpostbatch.model.BatchBuilder;
 import no.bekk.java.dpostbatch.model.SettingsProvider.Setting;
 import no.bekk.java.dpostbatch.model.SettingsProviderMock;
 
@@ -40,34 +41,28 @@ public class MonitorActiveBatchesTaskTest {
 		settingsProvider = new SettingsProviderMock(tempFolder.getRoot().toPath());
 		batchesDir = Paths.get(settingsProvider.getSetting(Setting.BATCHES_DIRECTORY));
 		task = new MonitorActiveBatchesTask(settingsProvider, batchListener);
+		
 	}
 
 	@Test
 	public void shouldPackageBatchIfNewAndReady() throws IOException {
-		createBasedirs();
-		Path batch1Dir = Files.createDirectory(batchesDir.resolve("batch1"));
-		Files.createFile(batch1Dir.resolve("batch.ready"));
+		BatchBuilder.newBatch(batchesDir).build();
 		task.run();
 		verify(batchListener, times(1)).newBatch((Batch) any());
 	}
 
 	@Test
 	public void shouldDoNothingIfNoBatchDir() throws IOException {
-		createBasedirs();
+		Files.createDirectories(batchesDir);
 		task.run();
 		verifyZeroInteractions(batchListener);
 	}
 
 	@Test
 	public void shouldDoNothingIfNoReadyBatches() throws IOException {
-		createBasedirs();
-		Files.createDirectory(batchesDir.resolve("batch1"));
+		BatchBuilder.newBatch(batchesDir).setNew().build();
 		task.run();
 		verifyZeroInteractions(batchListener);
-	}
-
-	private void createBasedirs() throws IOException {
-		Files.createDirectories(batchesDir);
 	}
 
 	@Test

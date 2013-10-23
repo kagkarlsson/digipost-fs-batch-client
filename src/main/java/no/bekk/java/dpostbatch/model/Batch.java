@@ -1,6 +1,6 @@
 package no.bekk.java.dpostbatch.model;
 
-import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -11,6 +11,7 @@ public class Batch {
 	private static final String LETTERS_FILE = "letters.csv";
 	private static final String BATCH_DESTINATION_XML = "masseutsendelse.xml";
 	private static final String BATCH_DESTINATION_ZIP = "batch.zip";
+	private static final String  LOG_FILE = "batch.log";
 	private Path batchDirectory;
 
 	public Batch(Path batchDirectory) {
@@ -24,8 +25,8 @@ public class Batch {
 	}
 
 	public boolean isReady() {
-		assertExists(batchDirectory);
-		return Files.exists(batchDirectory.resolve(BATCH_READY_FILE));
+		assertExists(batchDirectory); 
+		return Files.exists(getReadyFile());
 	}
 
 	public boolean hasNecessaryFiles() {
@@ -45,6 +46,10 @@ public class Batch {
 	public Path getSettingsFile() {
 		return batchDirectory.resolve(BATCH_SETTINGS_FILE);
 	}
+	
+	public Path getReadyFile() {
+		return batchDirectory.resolve(BATCH_READY_FILE);
+	}
 
 	public Path getDestinationXml() {
 		return batchDirectory.resolve(BATCH_DESTINATION_XML);
@@ -62,29 +67,25 @@ public class Batch {
 		return batchDirectory.resolve(BATCH_DESTINATION_ZIP);
 	}
 
-
-	/*
-	public class ActiveBatch {
-
-		private Path file;
-
-		public ActiveBatch(Path file) {
-			this.file = file;
-		}
-
-		public String getName() {
-			return Files.getNameWithoutExtension(file.getFileName().toString());
-		}
-
-		public boolean isReadyToSend() {
-			return "new".equals(Files.getFileExtension(file.getFileName().toString()));
-		}
-		
-		@Override
-		public String toString() {
-			return file.toString();
-		}
-
+	public void setSent() {
+		deleteReadyFile();
 	}
-	*/
+
+	private void deleteReadyFile() {
+		try {
+			Files.delete(getReadyFile());
+		} catch (IOException e) {
+			// Possibly allow this with a warning
+			throw new RuntimeException("Unable to delete ready-file " + getReadyFile(), e);
+		}
+	}
+
+	public void setValidationFailed() {
+		deleteReadyFile();
+	}
+
+	public Path getLogFile() {
+		return batchDirectory.resolve(LOG_FILE);
+	}
+
 }

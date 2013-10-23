@@ -3,9 +3,21 @@ package no.bekk.java.dpostbatch;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
+
+import org.apache.sshd.SshServer;
+import org.apache.sshd.common.NamedFactory;
+import org.apache.sshd.server.Command;
+import org.apache.sshd.server.CommandFactory;
+import org.apache.sshd.server.PasswordAuthenticator;
+import org.apache.sshd.server.command.ScpCommandFactory;
+import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
+import org.apache.sshd.server.session.ServerSession;
+import org.apache.sshd.server.sftp.SftpSubsystem;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
@@ -21,8 +33,11 @@ public class SftpClient {
 	private static final String USER = "karlsson";
 	private static final String PRIVATE_KEY_LOCATION = "/Users/karlssons/.ssh/id_rsa";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
+		 connectSftp();
+	}
+	private static void connectSftp() {
 		JSch jSch = new JSch();
 
 		try {
@@ -50,10 +65,11 @@ public class SftpClient {
 				System.out.println("Index: " + itFiles.next());
 			}
 
-//			final ByteArrayInputStream in = new ByteArrayInputStream("This is a sample text".getBytes());
+			// final ByteArrayInputStream in = new
+			// ByteArrayInputStream("This is a sample text".getBytes());
 
 			// upload file
-//			sftp.put(in, "test.txt", ChannelSftp.OVERWRITE);
+			// sftp.put(in, "test.txt", ChannelSftp.OVERWRITE);
 
 			sftp.disconnect();
 			session.disconnect();
@@ -65,6 +81,5 @@ public class SftpClient {
 			e.printStackTrace();
 		}
 	}
-
 
 }
