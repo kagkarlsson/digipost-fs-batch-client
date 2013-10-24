@@ -1,18 +1,17 @@
 package no.bekk.java.dpostbatch;
 
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.FileBatchLogger;
 import no.bekk.java.dpostbatch.model.SettingsProvider;
-import no.bekk.java.dpostbatch.model.SettingsProvider.Setting;
 import no.bekk.java.dpostbatch.model.SimpleSettingsProvider;
 import no.bekk.java.dpostbatch.task.BatchListener;
 import no.bekk.java.dpostbatch.task.MonitorActiveBatchesTask;
@@ -26,23 +25,25 @@ public class DigipostBatchClient {
 	
 	private SftpAccount sftpAccount;
 	private SettingsProvider settingsProvider;
-	private Timer timer;
 
 	public DigipostBatchClient(SettingsProvider settingsProvider, SftpAccount sftpAccount) {
 		this.settingsProvider = settingsProvider;
 		this.sftpAccount = sftpAccount;
-		timer = new Timer();
 	}
 
 	public static void main(String[] args) {
 		// TODO: settingsfile as settingsprovider
 		SettingsProvider settingsProvider = new SimpleSettingsProvider(Paths.get("."));
-		SftpAccount sftpAccount = new LocalSftpAccount(Paths.get(settingsProvider.getSetting(Setting.BATCHES_DIRECTORY)).resolveSibling("sftp"));
-		new DigipostBatchClient(settingsProvider, sftpAccount).start();
+		SftpAccount sftpAccount = new LocalSftpAccount(Paths.get(settingsProvider.getBatchesDirectory()).resolveSibling("sftp"));
+		
+		DigipostBatchClient client = new DigipostBatchClient(settingsProvider, sftpAccount);
+		
+		Timer timer = new Timer();
+		timer.schedule(client.processNewBatches(), 0, 5000);
 	}
 
-	public void start() {
-		timer.schedule(new MonitorActiveBatchesTask(settingsProvider, new BatchListener() {
+	public TimerTask processNewBatches() {
+		return new MonitorActiveBatchesTask(settingsProvider, new BatchListener() {
 
 			@Override
 			public void newBatch(Batch batch) {
@@ -67,12 +68,8 @@ public class DigipostBatchClient {
 					e.printStackTrace(System.err);
 				} 
 			}
-		}), 0, 5000);
+		});
 		
-	}
-	
-	public void stop() {
-		timer.cancel();
 	}
 
 }

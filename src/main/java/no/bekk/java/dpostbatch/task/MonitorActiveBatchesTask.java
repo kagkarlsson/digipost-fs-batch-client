@@ -9,7 +9,6 @@ import java.util.TimerTask;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.SettingsProvider;
-import no.bekk.java.dpostbatch.model.SettingsProvider.Setting;
 
 public class MonitorActiveBatchesTask extends TimerTask {
 
@@ -23,7 +22,7 @@ public class MonitorActiveBatchesTask extends TimerTask {
 
 	@Override
 	public void run() {
-		Path batchesDirectory = Paths.get(settingsProvider.getSetting(Setting.BATCHES_DIRECTORY));
+		Path batchesDirectory = Paths.get(settingsProvider.getBatchesDirectory());
 		
 		if (!Files.exists(batchesDirectory)) {
 			throw new RuntimeException("Directory for batches does not exist: " + batchesDirectory);

@@ -7,10 +7,10 @@ import java.nio.file.Path;
 public class Batch {
 	
 	public static final String BATCH_READY_FILE = "batch.ready";
+	public static final String BATCH_DESTINATION_ZIP = "batch.zip";
 	private static final String BATCH_SETTINGS_FILE = "batch.properties";
 	private static final String LETTERS_FILE = "letters.csv";
 	private static final String BATCH_DESTINATION_XML = "masseutsendelse.xml";
-	private static final String BATCH_DESTINATION_ZIP = "batch.zip";
 	private static final String  LOG_FILE = "batch.log";
 	private Path batchDirectory;
 

@@ -15,7 +15,6 @@ import java.nio.file.Paths;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchBuilder;
-import no.bekk.java.dpostbatch.model.SettingsProvider.Setting;
 import no.bekk.java.dpostbatch.model.SettingsProviderMock;
 
 import org.junit.Before;
@@ -39,7 +38,7 @@ public class MonitorActiveBatchesTaskTest {
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		settingsProvider = new SettingsProviderMock(tempFolder.getRoot().toPath());
-		batchesDir = Paths.get(settingsProvider.getSetting(Setting.BATCHES_DIRECTORY));
+		batchesDir = Paths.get(settingsProvider.getBatchesDirectory());
 		task = new MonitorActiveBatchesTask(settingsProvider, batchListener);
 		
 	}
