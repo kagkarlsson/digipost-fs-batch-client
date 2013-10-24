@@ -12,6 +12,7 @@ import no.bekk.java.dpostbatch.model.BrevProvider;
 
 public class CSVBrevProvider implements BrevProvider, Closeable {
 
+	public static final char SEPARATOR = ';';
 	private Path lettersFile;
 	private CSVReader csvReader;
 
@@ -22,7 +23,7 @@ public class CSVBrevProvider implements BrevProvider, Closeable {
 
 	private void initReader(Path lettersFile) {
 		try {
-			csvReader = new CSVReader(new FileReader(lettersFile.toFile()));
+			csvReader = new CSVReader(new FileReader(lettersFile.toFile()), SEPARATOR);
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException("Cannot find file " + lettersFile);
 		}

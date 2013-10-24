@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Batch {
-
+	
 	public static final String BATCH_READY_FILE = "batch.ready";
 	private static final String BATCH_SETTINGS_FILE = "batch.properties";
 	private static final String LETTERS_FILE = "letters.csv";
@@ -80,12 +80,12 @@ public class Batch {
 		}
 	}
 
-	public void setValidationFailed() {
-		deleteReadyFile();
-	}
-
 	public Path getLogFile() {
 		return batchDirectory.resolve(LOG_FILE);
+	}
+
+	public boolean hasFailed() {
+		return false;
 	}
 
 }

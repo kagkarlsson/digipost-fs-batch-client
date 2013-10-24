@@ -18,9 +18,6 @@ import no.bekk.java.dpostbatch.pack.ZipBuilder;
 
 public class PackageBatchTask extends BatchTask {
 
-	private Batch batch;
-	private SettingsProvider settingsProvider;
-
 	public PackageBatchTask(Batch batch, SettingsProvider settingsProvider, BatchLogger logger) {
 		super(batch, settingsProvider, logger);
 	}

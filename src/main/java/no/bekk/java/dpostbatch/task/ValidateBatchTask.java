@@ -21,22 +21,24 @@ public class ValidateBatchTask extends BatchTask {
 	}
 
 	public void run() {
-		boolean result = true;
+		boolean validationSucceeded = true;
 		if (!Files.exists(batch.getSettingsFile())) {
 			logger.log("Cannot find settingsfile for batch " + batch.getSettingsFile());
-			result = false;
+			validationSucceeded = false;
 		}
 		
 		if (!Files.exists(batch.getLettersCsv())) {
 			logger.log("Cannot find letters-file for batch " + batch.getLettersCsv());
-			result = false;
+			validationSucceeded = false;
 		} else {
 			boolean letterValidationErrors = validateLetters();
 			if (letterValidationErrors) {
 				logger.log("Validation of letter-file failed.");
-				batch.setValidationFailed();
-				throw new RuntimeException("Validation failed. See log-file for details.");
+				validationSucceeded = false;
 			}
+		}
+		if (!validationSucceeded) {
+			throw new RuntimeException("Validation failed. See log-file for details.");
 		}
 	}
 

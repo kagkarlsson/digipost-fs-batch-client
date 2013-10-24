@@ -13,6 +13,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import no.bekk.java.dpostbatch.model.BatchSettings.BatchSetting;
+import no.bekk.java.dpostbatch.pack.CSVBrevProvider;
 
 public class BatchBuilder {
 
@@ -83,14 +84,14 @@ public class BatchBuilder {
 			append(csv, b.foedselsnummer);
 			append(csv, b.emne);
 			append(csv, b.brevFil);
-			append(csv, "\n");
+			csv.append("\n");
 		}
 		return csv.toString().getBytes();
 	}
 
 	private void append(StringBuilder csv, String id) {
 		csv.append(id);
-		csv.append(",");
+		csv.append(CSVBrevProvider.SEPARATOR);
 	}
 
 	public BatchBuilder medBrev(Brev ... b) {
