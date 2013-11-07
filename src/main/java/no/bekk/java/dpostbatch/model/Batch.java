@@ -1,6 +1,5 @@
 package no.bekk.java.dpostbatch.model;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -67,25 +66,16 @@ public class Batch {
 		return batchDirectory.resolve(BATCH_DESTINATION_ZIP);
 	}
 
-	public void setSent() {
-		deleteReadyFile();
-	}
-
-	private void deleteReadyFile() {
-		try {
-			Files.delete(getReadyFile());
-		} catch (IOException e) {
-			// Possibly allow this with a warning
-			throw new RuntimeException("Unable to delete ready-file " + getReadyFile(), e);
-		}
-	}
-
 	public Path getLogFile() {
 		return batchDirectory.resolve(LOG_FILE);
 	}
 
 	public boolean hasFailed() {
 		return false;
+	}
+
+	public String getName() {
+		return batchDirectory.getFileName().toString();
 	}
 
 }

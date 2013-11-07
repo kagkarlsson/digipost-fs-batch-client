@@ -1,6 +1,8 @@
 package no.bekk.java.dpostbatch.model;
 
-public interface BrevProvider {
+import java.io.Closeable;
+
+public interface BrevProvider extends Closeable {
 
 	Brev nextBrev();
 	void reset();

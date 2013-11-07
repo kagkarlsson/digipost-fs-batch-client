@@ -7,11 +7,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.TimerTask;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.SettingsProvider;
 
 public class MonitorActiveBatchesTask extends TimerTask {
 
+	private static final Logger LOG = LoggerFactory.getLogger(MonitorActiveBatchesTask.class);
 	private SettingsProvider settingsProvider;
 	private BatchListener batchListener;
 
@@ -32,6 +36,7 @@ public class MonitorActiveBatchesTask extends TimerTask {
 			for (Path file : files) {
 				Batch batch = new Batch(file);
 				if (batch.isReady()) {
+					LOG.info("Found new ready batch: " + file.getFileName());
 					batchListener.newBatch(batch);
 				}
 			}

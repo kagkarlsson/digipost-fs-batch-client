@@ -11,6 +11,7 @@ import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchLogger;
 import no.bekk.java.dpostbatch.model.BatchSettings;
 import no.bekk.java.dpostbatch.model.Brev;
+import no.bekk.java.dpostbatch.model.BrevProvider;
 import no.bekk.java.dpostbatch.model.SettingsProvider;
 import no.bekk.java.dpostbatch.pack.CSVBrevProvider;
 import no.bekk.java.dpostbatch.pack.MasseutsendelseWriter;
@@ -47,7 +48,7 @@ public class PackageBatchTask extends BatchTask {
 	private Path writeBatchXml(BatchSettings batchSettings) {
 		Path destinationXml = batch.getDestinationXml();
 		try (OutputStream out = Files.newOutputStream(destinationXml);
-				CSVBrevProvider brevProvider = new CSVBrevProvider(batch.getLettersCsv())) {
+				BrevProvider brevProvider = new CSVBrevProvider(batch.getLettersCsv())) {
 			
 			new MasseutsendelseWriter(true).write(batchSettings, brevProvider, out);
 			return destinationXml;

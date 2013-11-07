@@ -83,7 +83,7 @@ public class BatchBuilder {
 			append(csv, b.kundeId);
 			append(csv, b.foedselsnummer);
 			append(csv, b.emne);
-			append(csv, b.brevFil);
+			csv.append(b.brevFil);
 			csv.append("\n");
 		}
 		return csv.toString().getBytes();

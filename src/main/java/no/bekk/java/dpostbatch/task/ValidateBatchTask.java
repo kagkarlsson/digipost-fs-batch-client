@@ -1,69 +1,82 @@
 package no.bekk.java.dpostbatch.task;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-
-import com.google.common.base.CharMatcher;
-
-import au.com.bytecode.opencsv.CSVReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchLogger;
 import no.bekk.java.dpostbatch.model.SettingsProvider;
+import no.bekk.java.dpostbatch.pack.CSVBrevProvider;
+
+import com.google.common.base.CharMatcher;
 
 public class ValidateBatchTask extends BatchTask {
+	
 
 	public ValidateBatchTask(Batch batch, SettingsProvider settingsProvider, BatchLogger logger) {
 		super(batch, settingsProvider, logger);
 	}
 
 	public void run() {
-		boolean validationSucceeded = true;
+		logger.log("Validating batch.");
+		Validation validation = new Validation();
 		if (!Files.exists(batch.getSettingsFile())) {
-			logger.log("Cannot find settingsfile for batch " + batch.getSettingsFile());
-			validationSucceeded = false;
+			validation.addError("Cannot find settingsfile for batch " + batch.getSettingsFile());
 		}
 		
 		if (!Files.exists(batch.getLettersCsv())) {
-			logger.log("Cannot find letters-file for batch " + batch.getLettersCsv());
-			validationSucceeded = false;
+			validation.addError("Cannot find letters-file for batch " + batch.getLettersCsv());
 		} else {
-			boolean letterValidationErrors = validateLetters();
-			if (letterValidationErrors) {
-				logger.log("Validation of letter-file failed.");
-				validationSucceeded = false;
-			}
+			validateLetters(validation);
 		}
-		if (!validationSucceeded) {
+		
+		if (validation.hasErrors()) {
+			validation.writeToLog(logger);
 			throw new RuntimeException("Validation failed. See log-file for details.");
 		}
+		logger.log("Validation ok.");
 	}
 
-	private boolean validateLetters() {
-		boolean hasErrors = false;
+	private void validateLetters(Validation validation) {
+		logger.log("Validating letters.");
 		try (BufferedReader reader = new BufferedReader(new FileReader(batch.getLettersCsv().toFile()))) {
 			int index = 1;
 			String line;
 			while((line = reader.readLine()) != null) {
-				hasErrors = hasErrors || validateLine(line, index);
+				validateLine(line, index, validation);
 				index++;
 			}
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to read letters file.", e);
 		}
-		return !hasErrors;
 	}
 
-	private boolean validateLine(String line, int index) {
-		int occurences = CharMatcher.is(',').countIn(line);
+	private void validateLine(String line, int index, Validation validation) {
+		int occurences = CharMatcher.is(CSVBrevProvider.SEPARATOR).countIn(line);
 		if (occurences != 4) {
-			logger.log("Line " + index + " has wrong number of columns: " + occurences);
-			return false;
+			validation.addError("Line " + index + " has wrong number of columns: " + occurences);
 		}
-		return true;
 	}
 
+	public class Validation {
+		private final List<String> errors = new ArrayList<>();
+
+		public void addError(String error) {
+			errors.add(error);
+		}
+
+		public boolean hasErrors() {
+			return !errors.isEmpty();
+		}
+
+		public void writeToLog(BatchLogger logger) {
+			for (String error : errors) {
+				logger.log(error);
+			}
+		}
+	}
 }

@@ -52,6 +52,7 @@ public class DigipostBatchClient {
 				try (FileBatchLogger logger = new FileBatchLogger(new FileWriter(logfile.toFile()))) {
 					
 					try {
+						logger.log("Processing new batch " + batch.getName());
 						Files.delete(batch.getReadyFile());
 						new ValidateBatchTask(batch, settingsProvider, logger).run();
 						new PackageBatchTask(batch, settingsProvider, logger).run();

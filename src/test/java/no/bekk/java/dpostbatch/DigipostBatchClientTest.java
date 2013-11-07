@@ -1,16 +1,14 @@
 package no.bekk.java.dpostbatch;
 
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchBuilder;
-import no.bekk.java.dpostbatch.model.SettingsProvider;
+import no.bekk.java.dpostbatch.model.BrevBuilder;
 import no.bekk.java.dpostbatch.model.SimpleSettingsProvider;
 import no.bekk.java.dpostbatch.transfer.LocalSftpAccount;
 
@@ -26,28 +24,34 @@ public class DigipostBatchClientTest {
 	private Path rootFolder;
 	private DigipostBatchClient client;
 	private Path sftpFolder;
+	private Path batchFolder;
+	private BatchBuilder batchBuilder;
 	
 	@Before
 	public void setUp() throws IOException {
 		rootFolder = tempFolder.getRoot().toPath();
-		tempFolder.newFolder("batches");
+		batchFolder = tempFolder.newFolder("batches").toPath();
 		sftpFolder = tempFolder.newFolder("sftp").toPath();
 		client = new DigipostBatchClient(
 				new SimpleSettingsProvider(rootFolder), 
 				new LocalSftpAccount(sftpFolder));
+		batchBuilder = BatchBuilder.newBatch(batchFolder);
 	}
 	
 	@Test
-	public void test() throws IOException {
-		Batch batch = BatchBuilder.newBatch(rootFolder.resolve("batch1")).build();
+	public void should_upload_packaged_batch() throws IOException {
+		Batch batch = batchBuilder.medBrev(BrevBuilder.newBrev().build()).build();
 		client.processNewBatches().run();
 		
-		// TODO: route batch-logger for tests to sysout
 		assertUploaded(batch);
 	}
 
 	private void assertUploaded(Batch batch) {
-		assertTrue(Files.exists(sftpFolder.resolve(Batch.BATCH_READY_FILE)));
+		Path uploaded = 
+				sftpFolder
+				.resolve("masseutsendelse")
+				.resolve(batch.getDestinationZip().getFileName());
+		assertTrue(Files.exists(uploaded));
 	}
 	
 }
