@@ -1,27 +1,27 @@
-package no.bekk.java.dpostbatch.task;
+package no.bekk.java.dpostbatch.task.send;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.TimerTask;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.SettingsProvider;
+import no.bekk.java.dpostbatch.task.BatchHandler;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MonitorActiveBatchesTask extends TimerTask {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MonitorActiveBatchesTask.class);
 	private SettingsProvider settingsProvider;
-	private BatchListener batchListener;
+	private BatchHandler batchHandler;
 
-	public MonitorActiveBatchesTask(SettingsProvider settingsProvider, BatchListener batchListener) {
+	public MonitorActiveBatchesTask(SettingsProvider settingsProvider, BatchHandler batchHandler) {
 		this.settingsProvider = settingsProvider;
-		this.batchListener = batchListener;
+		this.batchHandler = batchHandler;
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class MonitorActiveBatchesTask extends TimerTask {
 				Batch batch = new Batch(file);
 				if (batch.isReady()) {
 					LOG.info("Found new ready batch: " + file.getFileName());
-					batchListener.newBatch(batch);
+					batchHandler.handle(batch);
 				}
 			}
 			

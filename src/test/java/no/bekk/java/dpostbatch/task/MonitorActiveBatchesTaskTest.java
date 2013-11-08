@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchBuilder;
 import no.bekk.java.dpostbatch.model.SettingsProviderMock;
+import no.bekk.java.dpostbatch.task.send.MonitorActiveBatchesTask;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,7 +30,7 @@ public class MonitorActiveBatchesTaskTest {
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 	@Mock
-	private BatchListener batchListener;
+	private BatchHandler batchListener;
 	private SettingsProviderMock settingsProvider;
 	private MonitorActiveBatchesTask task;
 	private Path batchesDir;
@@ -46,7 +47,7 @@ public class MonitorActiveBatchesTaskTest {
 	public void shouldPackageBatchIfNewAndReady() throws IOException {
 		BatchBuilder.newBatch(batchesDir).build();
 		task.run();
-		verify(batchListener, times(1)).newBatch((Batch) any());
+		verify(batchListener, times(1)).handle((Batch) any());
 	}
 
 	@Test

@@ -1,4 +1,4 @@
-package no.bekk.java.dpostbatch.task;
+package no.bekk.java.dpostbatch.task.send;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,19 +9,13 @@ import java.util.List;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchLogger;
-import no.bekk.java.dpostbatch.model.SettingsProvider;
 import no.bekk.java.dpostbatch.pack.CSVBrevProvider;
 
 import com.google.common.base.CharMatcher;
 
-public class ValidateBatchTask extends BatchTask {
-	
+public class ValidateBatchTask {
 
-	public ValidateBatchTask(Batch batch, SettingsProvider settingsProvider, BatchLogger logger) {
-		super(batch, settingsProvider, logger);
-	}
-
-	public void run() {
+	public void run(Batch batch, BatchLogger logger) {
 		logger.log("Validating batch.");
 		Validation validation = new Validation();
 		if (!Files.exists(batch.getSettingsFile())) {
@@ -31,7 +25,7 @@ public class ValidateBatchTask extends BatchTask {
 		if (!Files.exists(batch.getLettersCsv())) {
 			validation.addError("Cannot find letters-file for batch " + batch.getLettersCsv());
 		} else {
-			validateLetters(validation);
+			validateLetters(batch, validation);
 		}
 		
 		if (validation.hasErrors()) {
@@ -41,7 +35,7 @@ public class ValidateBatchTask extends BatchTask {
 		logger.log("Validation ok.");
 	}
 
-	private void validateLetters(Validation validation) {
+	private void validateLetters(Batch batch, Validation validation) {
 		try (BufferedReader reader = new BufferedReader(new FileReader(batch.getLettersCsv().toFile()))) {
 			int index = 1;
 			String line;

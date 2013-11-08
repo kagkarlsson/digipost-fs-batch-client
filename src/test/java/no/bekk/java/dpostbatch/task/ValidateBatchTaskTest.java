@@ -1,18 +1,15 @@
 package no.bekk.java.dpostbatch.task;
 
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.matches;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchBuilder;
-import no.bekk.java.dpostbatch.model.Brev;
-import no.bekk.java.dpostbatch.model.BrevBuilder;
+import no.bekk.java.dpostbatch.task.send.ValidateBatchTask;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -56,7 +53,7 @@ public class ValidateBatchTaskTest {
 
 	private void validateBatchThatShouldFail(Batch batch, MockLogger logger) {
 		try {
-			new ValidateBatchTask(batch, null, logger).run();
+			new ValidateBatchTask().run(batch, logger);
 			fail();
 		} catch (Exception e) {
 		}

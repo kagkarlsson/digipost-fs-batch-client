@@ -2,8 +2,8 @@ package no.bekk.java.dpostbatch.task;
 
 import no.bekk.java.dpostbatch.model.Batch;
 
-public interface BatchListener {
+public interface BatchHandler {
 
-	void newBatch(Batch batch);
+	void handle(Batch batch);
 
 }

@@ -10,6 +10,7 @@ import java.util.zip.ZipFile;
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchBuilder;
 import no.bekk.java.dpostbatch.model.Brev;
+import no.bekk.java.dpostbatch.task.send.PackageBatchTask;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -31,7 +32,7 @@ public class PackageBatchTaskTest {
 		Brev brev = new Brev("id", "kundeId", "01010112345", "emne", "fil.pdf");
 		Batch batch = batchBuilder.medBrev(brev).build();
 		
-		new PackageBatchTask(batch, null, new MockLogger()).run();
+		new PackageBatchTask().run(batch, new MockLogger());
 		
 		assertTrue(Files.exists(batch.getDestinationZip()));
 		ZipFile zip = new ZipFile(batch.getDestinationZip().toFile());

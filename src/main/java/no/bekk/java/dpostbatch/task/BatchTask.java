@@ -10,7 +10,7 @@ public abstract class BatchTask {
 	protected SettingsProvider settingsProvider;
 	protected BatchLogger logger;
 
-	public BatchTask(Batch batch, SettingsProvider settingsProvider, BatchLogger logger) {
+	public BatchTask(SettingsProvider settingsProvider) {
 		this.batch = batch;
 		this.settingsProvider = settingsProvider;
 		this.logger = logger;
