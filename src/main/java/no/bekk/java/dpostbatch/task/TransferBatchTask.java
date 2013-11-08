@@ -25,7 +25,7 @@ public class TransferBatchTask extends BatchTask {
 			throw new RuntimeException("Batch-zip does not exist: " + zip);
 		}
 		
-		sftpAccount.upload(zip, zip.getFileName().toString());
+		sftpAccount.upload(zip, zip.getFileName().toString() + ".zip");
 		logger.log("Transfer ok.");
 	}
 

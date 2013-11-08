@@ -11,9 +11,8 @@ public class SettingsProviderMock implements SettingsProvider {
 	}
 
 	@Override
-	public String getBatchesDirectory() {
-		Path batchesDir = rootFolder.resolve("batches");
-		return batchesDir.toString();
+	public Path getBatchesDirectory() {
+		return rootFolder.resolve("batches");
 	}
 
 }

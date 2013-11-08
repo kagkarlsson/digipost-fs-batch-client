@@ -1,5 +1,8 @@
 package no.bekk.java.dpostbatch.task;
 
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+import static java.nio.file.StandardOpenOption.WRITE;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -24,10 +27,11 @@ public class PackageBatchTask extends BatchTask {
 	}
 
 	public void run() {
-		
+		logger.log("Packaging batch.");
 		BatchSettings batchSettings = new BatchSettings(batch.getSettingsFile());
 		
 		Path writtenXml = writeBatchXml(batchSettings);
+		logger.log("Wrote masseutsendelse.xml.");
 		
 		ZipBuilder zipBuilder = new ZipBuilder();
 		zipBuilder.addEntry("masseutsendelse.xml", writtenXml.toFile());
@@ -43,6 +47,7 @@ public class PackageBatchTask extends BatchTask {
 		}
 		
 		zipBuilder.buildTo(batch.getDestinationZip().toFile());
+		logger.log("Packaged to " + batch.getDestinationZip().toAbsolutePath());
 	}
 
 	private Path writeBatchXml(BatchSettings batchSettings) {

@@ -11,8 +11,8 @@ public class SimpleSettingsProvider implements SettingsProvider {
 	}
 
 	@Override
-	public String getBatchesDirectory() {
-		return rootFolder.resolve("batches").toString();
+	public Path getBatchesDirectory() {
+		return rootFolder.resolve("batches");
 	}
 
 }

@@ -21,7 +21,12 @@ import no.bekk.java.dpostbatch.task.ValidateBatchTask;
 import no.bekk.java.dpostbatch.transfer.LocalSftpAccount;
 import no.bekk.java.dpostbatch.transfer.SftpAccount;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DigipostBatchClient {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(DigipostBatchClient.class);
 	
 	private SftpAccount sftpAccount;
 	private SettingsProvider settingsProvider;
@@ -34,12 +39,13 @@ public class DigipostBatchClient {
 	public static void main(String[] args) {
 		// TODO: settingsfile as settingsprovider
 		SettingsProvider settingsProvider = new SimpleSettingsProvider(Paths.get("."));
-		SftpAccount sftpAccount = new LocalSftpAccount(Paths.get(settingsProvider.getBatchesDirectory()).resolveSibling("sftp"));
+		SftpAccount sftpAccount = new LocalSftpAccount(settingsProvider.getBatchesDirectory().resolveSibling("sftp"));
 		
 		DigipostBatchClient client = new DigipostBatchClient(settingsProvider, sftpAccount);
 		
 		Timer timer = new Timer();
 		timer.schedule(client.processNewBatches(), 0, 5000);
+		LOG.info("Started monitoring " + settingsProvider.getBatchesDirectory().toAbsolutePath());
 	}
 
 	public TimerTask processNewBatches() {
@@ -62,7 +68,7 @@ public class DigipostBatchClient {
 					} catch (Exception e) {
 						StringWriter stacktrace = new StringWriter();
 						e.printStackTrace(new PrintWriter(stacktrace));
-						logger.log("Failed to process batch" + stacktrace.toString());
+						logger.log("Failed to process batch\n" + stacktrace.toString());
 					}
 				} catch (Exception e) {
 					System.err.println("Unable to open batch-logger for batch: " + batch.toString());

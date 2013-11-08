@@ -38,9 +38,8 @@ public class MonitorActiveBatchesTaskTest {
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		settingsProvider = new SettingsProviderMock(tempFolder.getRoot().toPath());
-		batchesDir = Paths.get(settingsProvider.getBatchesDirectory());
+		batchesDir = settingsProvider.getBatchesDirectory();
 		task = new MonitorActiveBatchesTask(settingsProvider, batchListener);
-		
 	}
 
 	@Test

@@ -24,6 +24,7 @@ public class LocalSftpAccount implements SftpAccount {
 	public void upload(Path zip, String destinationFilename) {
 		Path destination = masseutsendelse.resolve(destinationFilename);
 		try {
+			Files.deleteIfExists(destination);
 			Files.copy(zip, destination);
 		} catch (IOException e) {
 			throw new RuntimeException("Error when uploading file to " + destination, e);

@@ -42,7 +42,6 @@ public class ValidateBatchTask extends BatchTask {
 	}
 
 	private void validateLetters(Validation validation) {
-		logger.log("Validating letters.");
 		try (BufferedReader reader = new BufferedReader(new FileReader(batch.getLettersCsv().toFile()))) {
 			int index = 1;
 			String line;
