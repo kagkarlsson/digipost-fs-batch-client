@@ -1,5 +1,6 @@
 package no.bekk.java.dpostbatch.model;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class SimpleSettingsProvider implements SettingsProvider {
@@ -12,7 +13,12 @@ public class SimpleSettingsProvider implements SettingsProvider {
 
 	@Override
 	public Path getBatchesDirectory() {
-		return rootFolder.resolve("batches");
+		Path batchesDirectory = rootFolder.resolve("batches");
+		if (!Files.exists(batchesDirectory)) {
+			throw new RuntimeException("Directory for batches does not exist: " + batchesDirectory);
+		}
+
+		return batchesDirectory;
 	}
 
 }

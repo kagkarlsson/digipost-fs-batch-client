@@ -18,7 +18,7 @@ import no.bekk.java.dpostbatch.pack.ZipBuilder;
 
 public class PackageBatchTask  {
 
-	public void run(Batch batch, BatchLogger logger) {
+	public BatchSettings run(Batch batch, BatchLogger logger) {
 		logger.log("Packaging batch.");
 		BatchSettings batchSettings = new BatchSettings(batch.getSettingsFile());
 		
@@ -40,6 +40,7 @@ public class PackageBatchTask  {
 		
 		zipBuilder.buildTo(batch.getDestinationZip().toFile());
 		logger.log("Packaged to " + batch.getDestinationZip().toAbsolutePath());
+		return batchSettings;
 	}
 
 	private Path writeBatchXml(Batch batch, BatchSettings batchSettings) {

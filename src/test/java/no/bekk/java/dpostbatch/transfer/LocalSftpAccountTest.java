@@ -5,6 +5,9 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Set;
+
+import no.bekk.java.dpostbatch.sftp.SftpReceipt;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,20 +43,16 @@ public class LocalSftpAccountTest {
 	@Test
 	public void shouldDownloadReceipt() throws IOException {
 		Path receiptDestination = tempFolder.getRoot().toPath().resolve("receipt.zip");
-		Files.createFile(receiptFolder.resolve("batch1-1234.zip"));
-		boolean result = localSftpAccount.downloadReceipt("batch1", receiptDestination);
+		String receiptName = "myjob.resultat.20120101-123456789.zip";
+		Files.createFile(receiptFolder.resolve(receiptName));
+		Set<SftpReceipt> receipts = localSftpAccount.listReceipts();
+		assertEquals(1, receipts.size());
+		
+		SftpReceipt r = receipts.iterator().next();
+		boolean result = localSftpAccount.download(r.getRemotePath(), receiptDestination);
 		
 		assertTrue(result);
 		assertTrue(Files.exists(receiptDestination));
 	}
 
-	@Test
-	public void shouldNotDownloadReceiptIfNotExisting() throws IOException {
-		Path receiptDestination = tempFolder.getRoot().toPath().resolve("receipt.zip");
-		boolean result = localSftpAccount.downloadReceipt("batch1", receiptDestination);
-		
-		assertFalse(result);
-		assertFalse(Files.exists(receiptDestination));
-	}
-	
 }

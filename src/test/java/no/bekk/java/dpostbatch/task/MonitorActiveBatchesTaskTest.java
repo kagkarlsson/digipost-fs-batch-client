@@ -64,13 +64,4 @@ public class MonitorActiveBatchesTaskTest {
 		verifyZeroInteractions(batchListener);
 	}
 
-	@Test
-	public void shouldFailIfBatchDirectoryDoesNotExist() throws IOException {
-		try {
-			task.run();
-			fail();
-		} catch (RuntimeException e) {
-			assertThat(e.getMessage(), containsString("Directory for batches"));
-		}
-	}
 }

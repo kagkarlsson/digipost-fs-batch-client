@@ -1,9 +1,15 @@
 package no.bekk.java.dpostbatch.transfer;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
+
+import no.bekk.java.dpostbatch.sftp.SftpReceipt;
 
 public class LocalSftpAccount implements SftpAccount {
 
@@ -31,22 +37,40 @@ public class LocalSftpAccount implements SftpAccount {
 		}
 	}
 	
-	public boolean downloadReceipt(String batchId, Path destination) {
+	@Override
+	public Set<SftpReceipt> listReceipts() {
+		Set<SftpReceipt> receipts = new HashSet<>();
 		Path receiptFolder = masseutsendelse.resolve("kvittering");
 		if (!Files.exists(receiptFolder)) {
-			return false;
+			return receipts;
 		}
 		try (DirectoryStream<Path> files = Files.newDirectoryStream(receiptFolder)) {
 			for (Path file : files) {
-				if (file.getFileName().toString().startsWith(batchId)) {
-					Files.copy(file, destination);
-					return true;
+				String filename = localSftpDirectory.relativize(file).normalize().toString();
+				if (SftpReceipt.isReceipt(filename)) {
+					receipts.add(SftpReceipt.fromReceiptName(filename));
 				}
 			}
-			return false;
+			return receipts;
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to list files in receipt folder " + receiptFolder, e);
 		}
+	}
+
+	@Override
+	public boolean download(String remoteFilename, Path downloadTo) {
+		Path remoteFile = localSftpDirectory.resolve(remoteFilename);
+		if (!Files.exists(remoteFile)) {
+			return false;
+		}
+		
+		try {
+			Files.copy(remoteFile, downloadTo, REPLACE_EXISTING);
+			return true;
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to copy " + remoteFile + " to " + downloadTo, e);
+		}
+
 	}
 
 }

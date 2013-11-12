@@ -5,6 +5,8 @@ import java.util.Timer;
 
 import no.bekk.java.dpostbatch.model.SettingsProvider;
 import no.bekk.java.dpostbatch.model.SimpleSettingsProvider;
+import no.bekk.java.dpostbatch.task.receipt.CheckForReceiptTask;
+import no.bekk.java.dpostbatch.task.receipt.NewReceiptHandler;
 import no.bekk.java.dpostbatch.task.send.MonitorActiveBatchesTask;
 import no.bekk.java.dpostbatch.task.send.NewBatchHandler;
 import no.bekk.java.dpostbatch.transfer.LocalSftpAccount;
@@ -27,8 +29,13 @@ public class DigipostBatchClient {
 		MonitorActiveBatchesTask checkForNewBatches = 
 				new MonitorActiveBatchesTask(settingsProvider, newBatchHandler);
 		
+		NewReceiptHandler newReceiptHandler = new NewReceiptHandler(settingsProvider, sftpAccount);
+		CheckForReceiptTask checkForReceipt = 
+				new CheckForReceiptTask(settingsProvider, sftpAccount, newReceiptHandler);
+		
 		Timer timer = new Timer();
-		timer.schedule(checkForNewBatches, 0, 5000);
+		timer.schedule(checkForNewBatches, 0, 5_000);
+		timer.schedule(checkForReceipt, 0, 30_000);
 		LOG.info("Started monitoring " + settingsProvider.getBatchesDirectory().toAbsolutePath());
 	}
 

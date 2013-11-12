@@ -26,12 +26,8 @@ public class MonitorActiveBatchesTask extends TimerTask {
 
 	@Override
 	public void run() {
-		Path batchesDirectory = settingsProvider.getBatchesDirectory();
 		LOG.debug("Checking for new batches.");
-		
-		if (!Files.exists(batchesDirectory)) {
-			throw new RuntimeException("Directory for batches does not exist: " + batchesDirectory);
-		}
+		Path batchesDirectory = settingsProvider.getBatchesDirectory();
 		
 		try (DirectoryStream<Path> files = Files.newDirectoryStream(batchesDirectory)) {
 			for (Path file : files) {
