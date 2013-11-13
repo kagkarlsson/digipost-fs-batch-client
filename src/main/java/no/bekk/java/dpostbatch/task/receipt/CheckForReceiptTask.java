@@ -2,10 +2,11 @@ package no.bekk.java.dpostbatch.task.receipt;
 
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
-import java.util.Collection;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimerTask;
@@ -64,11 +65,21 @@ public class CheckForReceiptTask extends TimerTask {
 
 	private Set<Batch> listBatchesWaitingForReceipt() {
 		try {
-			Files.walkFileTree(settingsProvider.getBatchesDirectory(), new HashSet<FileVisitOption>(), 1, 
+			final Set<Batch> batches = new HashSet<>();
+			Files.walkFileTree(settingsProvider.getBatchesDirectory(), new HashSet<FileVisitOption>(), 2, 
 					new SimpleFileVisitor<Path>() {
 
+				@Override
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+					if (file.getFileName().toString().equals(Batch.AWAIT_RECEIPT_FILE)) {
+						batches.add(new Batch(file.getParent()));
+						return FileVisitResult.SKIP_SIBLINGS;
+					}
+					return FileVisitResult.CONTINUE;
+				}
+				
 			});
-			return null;
+			return batches;
 		} catch (IOException e) {
 			throw new RuntimeException("Error when listing batches that await receipt.", e);
 		}

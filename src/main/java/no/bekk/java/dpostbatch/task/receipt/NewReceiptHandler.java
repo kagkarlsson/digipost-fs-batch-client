@@ -17,7 +17,6 @@ public class NewReceiptHandler {
 
 	public void handle(Batch batch, SftpReceipt expectedReceipt) {
 		sftpAccount.download(expectedReceipt.getRemotePath(), batch.getReceiptPath());
-		
 	}
 
 }

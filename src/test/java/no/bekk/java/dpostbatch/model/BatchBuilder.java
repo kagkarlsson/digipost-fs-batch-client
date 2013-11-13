@@ -23,7 +23,9 @@ public class BatchBuilder {
 	private List<Brev> brev = new ArrayList<>();
 	private boolean shouldHaveSettingsFile = true;
 	private boolean shouldHaveLettersFile = true;
+	private boolean awaitingReceipt = false;
 	private List<String> csvLines;
+	private String uploadedFilename;
 
 	private BatchBuilder(Path batchesDirectory) {
 		this.batchesDirectory = batchesDirectory;
@@ -42,24 +44,28 @@ public class BatchBuilder {
 		Batch batch = new Batch(batchFolder);
 		if (ready) {
 			Files.createFile(batch.getReadyFile());
-			if (shouldHaveSettingsFile) {
-				defaultSettings(batch.getSettingsFile());
-			}
-			if (shouldHaveLettersFile) {
-				byte[] content;
-				if (csvLines != null) {
-					content = Joiner.on("\n").join(csvLines).getBytes();
-				} else {
-					content = toCsv(brev);
-				}
-				Files.write(batch.getLettersCsv(), content, StandardOpenOption.CREATE_NEW);
-			}
-			
-			for (Brev b : brev) {
-				Files.write(batchFolder.resolve(b.brevFil), "fake-pdf-content".getBytes(), StandardOpenOption.CREATE_NEW);
-			}
-
 		}
+		if (shouldHaveSettingsFile) {
+			defaultSettings(batch.getSettingsFile());
+		}
+		if (shouldHaveLettersFile) {
+			byte[] content;
+			if (csvLines != null) {
+				content = Joiner.on("\n").join(csvLines).getBytes();
+			} else {
+				content = toCsv(brev);
+			}
+			Files.write(batch.getLettersCsv(), content, StandardOpenOption.CREATE_NEW);
+		}
+
+		for (Brev b : brev) {
+			Files.write(batchFolder.resolve(b.brevFil), "fake-pdf-content".getBytes(), StandardOpenOption.CREATE_NEW);
+		}
+		
+		if (awaitingReceipt) {
+			Files.write(batch.getAwaitReceiptFile(), uploadedFilename.getBytes());
+		}
+
 		return batch;
 	}
 
@@ -94,7 +100,7 @@ public class BatchBuilder {
 		csv.append(CSVBrevProvider.SEPARATOR);
 	}
 
-	public BatchBuilder medBrev(Brev ... b) {
+	public BatchBuilder medBrev(Brev... b) {
 		brev = Lists.newArrayList(b);
 		return this;
 	}
@@ -114,8 +120,18 @@ public class BatchBuilder {
 		return this;
 	}
 
-	public BatchBuilder medBrevCsv(String ... csvLines) {
+	public BatchBuilder medBrevCsv(String... csvLines) {
 		this.csvLines = Lists.newArrayList(csvLines);
+		return this;
+	}
+
+	public BatchBuilder medUploadedFilename(String uploadedFilename) {
+		this.uploadedFilename = uploadedFilename;
+		return this;
+	}
+
+	public BatchBuilder awaitReceipt() {
+		this.awaitingReceipt = true;
 		return this;
 	}
 
