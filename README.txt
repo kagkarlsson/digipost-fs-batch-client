@@ -1,0 +1,1 @@
+Simple filesystem-based client for the Digipost batch-api.
