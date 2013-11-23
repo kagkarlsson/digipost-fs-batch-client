@@ -1,5 +1,6 @@
-package no.bekk.java.dpostbatch;
+package no.bekk.java.dpostbatch.sftp;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,11 +13,10 @@ import java.util.Vector;
 import org.apache.sshd.SshServer;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.server.Command;
-import org.apache.sshd.server.CommandFactory;
-import org.apache.sshd.server.PasswordAuthenticator;
+import org.apache.sshd.server.UserAuth;
+import org.apache.sshd.server.auth.UserAuthNone;
 import org.apache.sshd.server.command.ScpCommandFactory;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
-import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.sftp.SftpSubsystem;
 
 import com.jcraft.jsch.Channel;
@@ -28,15 +28,43 @@ import com.jcraft.jsch.SftpException;
 
 public class SftpClient {
 
-	private static final String HOST = "192.168.1.118";
-	private static final int PORT = 22;
+	private static final String HOST = "localhost";
+	private static final int PORT = 23001;
 	private static final String USER = "karlsson";
 	private static final String PRIVATE_KEY_LOCATION = "/Users/karlssons/.ssh/id_rsa";
 
 	public static void main(String[] args) throws Exception {
-
-		 connectSftp();
+		SshServer sshd = startSSHD();
+		connectSftp();
+		sshd.stop();
 	}
+
+	private static SshServer startSSHD() {
+		SshServer sshd = SshServer.setUpDefaultServer();
+		sshd.setPort(PORT);
+		sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider("hostkey.ser"));
+
+		List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<NamedFactory<UserAuth>>();
+		userAuthFactories.add(new UserAuthNone.Factory());
+		sshd.setUserAuthFactories(userAuthFactories);
+
+		sshd.setCommandFactory(new ScpCommandFactory());
+
+		List<NamedFactory<Command>> namedFactoryList = new ArrayList<NamedFactory<Command>>();
+		namedFactoryList.add(new SftpSubsystem.Factory());
+		sshd.setSubsystemFactories(namedFactoryList);
+
+		String sftpUserDir = "/Users/karlssons/work/digipost-batch-client/sftp";
+		sshd.setFileSystemFactory(new DirectoryNativeFileSystemFactory(new File(sftpUserDir)));
+
+		try {
+			sshd.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sshd;
+	}
+
 	private static void connectSftp() {
 		JSch jSch = new JSch();
 
@@ -52,6 +80,7 @@ public class SftpClient {
 			Properties config = new Properties();
 			config.put("StrictHostKeyChecking", "no");
 			session.setConfig(config);
+			session.setPassword("hej");
 
 			session.connect();
 			Channel channel = session.openChannel("sftp");
