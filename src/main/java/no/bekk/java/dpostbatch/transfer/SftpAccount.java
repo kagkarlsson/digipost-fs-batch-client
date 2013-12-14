@@ -9,8 +9,8 @@ public interface SftpAccount {
 
 	void upload(Path zip, String string);
 
-	Set<SftpReceipt> listReceipts();
+	void download(String remoteFilename, Path receiptPath);
 
-	boolean download(String remoteFilename, Path receiptPath);
+	Set<SftpReceipt> listReceipts();
 
 }

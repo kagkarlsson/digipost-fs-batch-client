@@ -1,4 +1,4 @@
-package no.bekk.java.dpostbatch.sftp;
+package no.bekk.java.dpostbatch.sftp.server;
 
 import java.io.File;
 

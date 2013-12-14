@@ -58,19 +58,17 @@ public class LocalSftpAccount implements SftpAccount {
 	}
 
 	@Override
-	public boolean download(String remoteFilename, Path downloadTo) {
+	public void download(String remoteFilename, Path downloadTo) {
 		Path remoteFile = localSftpDirectory.resolve(remoteFilename);
 		if (!Files.exists(remoteFile)) {
-			return false;
+			return;
 		}
 		
 		try {
 			Files.copy(remoteFile, downloadTo, REPLACE_EXISTING);
-			return true;
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to copy " + remoteFile + " to " + downloadTo, e);
 		}
-
 	}
 
 }

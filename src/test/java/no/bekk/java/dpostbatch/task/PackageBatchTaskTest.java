@@ -35,11 +35,10 @@ public class PackageBatchTaskTest {
 		new PackageBatchTask().run(batch, new MockLogger());
 		
 		assertTrue(Files.exists(batch.getDestinationZip()));
+		
 		ZipFile zip = new ZipFile(batch.getDestinationZip().toFile());
-		
-		contains(zip, "masseutsendelse.xml");
-		contains(zip, "fil.pdf");
-		
+		assertTrue(contains(zip, "masseutsendelse.xml"));
+		assertTrue(contains(zip, "fil.pdf"));
 		zip.close();
 	}
 

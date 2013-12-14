@@ -49,9 +49,8 @@ public class LocalSftpAccountTest {
 		assertEquals(1, receipts.size());
 		
 		SftpReceipt r = receipts.iterator().next();
-		boolean result = localSftpAccount.download(r.getRemotePath(), receiptDestination);
+		localSftpAccount.download(r.getRemotePath(), receiptDestination);
 		
-		assertTrue(result);
 		assertTrue(Files.exists(receiptDestination));
 	}
 
