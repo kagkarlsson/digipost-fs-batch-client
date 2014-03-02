@@ -13,14 +13,14 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import no.bekk.java.dpostbatch.model.BatchSettings.BatchSetting;
-import no.bekk.java.dpostbatch.pack.CSVBrevProvider;
+import no.bekk.java.dpostbatch.pack.CsvDocumentProvider;
 
 public class BatchBuilder {
 
 	private Path batchesDirectory;
 	private String batchName = "batch1";
 	private boolean ready = true;
-	private List<Brev> brev = new ArrayList<>();
+	private List<Document> documents = new ArrayList<>();
 	private boolean shouldHaveSettingsFile = true;
 	private boolean shouldHaveLettersFile = true;
 	private boolean awaitingReceipt = false;
@@ -32,9 +32,9 @@ public class BatchBuilder {
 	}
 
 	public static BatchBuilder newBatch(Path path) {
-		Brev brev = new Brev("id", "kundeId", "01010112345", "emne", "fil.pdf");
+		Document document = new Document("id", "kundeId", "01010112345", "emne", "fil.pdf");
 		BatchBuilder batchBuilder = new BatchBuilder(path);
-		batchBuilder.brev.add(brev);
+		batchBuilder.documents.add(document);
 		return batchBuilder;
 	}
 
@@ -53,13 +53,13 @@ public class BatchBuilder {
 			if (csvLines != null) {
 				content = Joiner.on("\n").join(csvLines).getBytes();
 			} else {
-				content = toCsv(brev);
+				content = toCsv(documents);
 			}
 			Files.write(batch.getLettersCsv(), content, StandardOpenOption.CREATE_NEW);
 		}
 
-		for (Brev b : brev) {
-			Files.write(batchFolder.resolve(b.brevFil), "fake-pdf-content".getBytes(), StandardOpenOption.CREATE_NEW);
+		for (Document b : documents) {
+			Files.write(batchFolder.resolve(b.inneholdFil), "fake-pdf-content".getBytes(), StandardOpenOption.CREATE_NEW);
 		}
 		
 		if (awaitingReceipt) {
@@ -81,15 +81,15 @@ public class BatchBuilder {
 		writer.close();
 	}
 
-	private byte[] toCsv(List<Brev> brev) {
+	private byte[] toCsv(List<Document> documents) {
 		StringBuilder csv = new StringBuilder();
-		for (Brev b : brev) {
+		for (Document b : documents) {
 
 			append(csv, b.id);
 			append(csv, b.kundeId);
 			append(csv, b.foedselsnummer);
 			append(csv, b.emne);
-			csv.append(b.brevFil);
+			csv.append(b.inneholdFil);
 			csv.append("\n");
 		}
 		return csv.toString().getBytes();
@@ -97,11 +97,11 @@ public class BatchBuilder {
 
 	private void append(StringBuilder csv, String id) {
 		csv.append(id);
-		csv.append(CSVBrevProvider.SEPARATOR);
+		csv.append(CsvDocumentProvider.SEPARATOR);
 	}
 
-	public BatchBuilder medBrev(Brev... b) {
-		brev = Lists.newArrayList(b);
+	public BatchBuilder medBrev(Document... b) {
+		documents = Lists.newArrayList(b);
 		return this;
 	}
 

@@ -9,7 +9,8 @@ import java.util.zip.ZipFile;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchBuilder;
-import no.bekk.java.dpostbatch.model.Brev;
+import no.bekk.java.dpostbatch.model.Document;
+import no.bekk.java.dpostbatch.model.MockLogger;
 import no.bekk.java.dpostbatch.task.send.PackageBatchTask;
 
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class PackageBatchTaskTest {
 	
 	@Test
 	public void test() throws Exception {
-		Brev brev = new Brev("id", "kundeId", "01010112345", "emne", "fil.pdf");
+		Document brev = new Document("id", "kundeId", "01010112345", "emne", "fil.pdf");
 		Batch batch = batchBuilder.medBrev(brev).build();
 		
 		new PackageBatchTask().run(batch, new MockLogger());

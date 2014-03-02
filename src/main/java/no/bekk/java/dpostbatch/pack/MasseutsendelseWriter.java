@@ -6,8 +6,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
 import no.bekk.java.dpostbatch.model.BatchSettings;
-import no.bekk.java.dpostbatch.model.Brev;
-import no.bekk.java.dpostbatch.model.BrevProvider;
+import no.bekk.java.dpostbatch.model.Document;
 
 import org.codehaus.staxmate.SMOutputFactory;
 import org.codehaus.staxmate.out.SMNamespace;
@@ -23,7 +22,7 @@ public class MasseutsendelseWriter {
 		this.indent = indent;
 	}
 
-	public void write(BatchSettings settings, BrevProvider brevProvider, OutputStream destination) throws XMLStreamException  {
+	public void write(BatchSettings settings, DocumentProvider brevProvider, OutputStream destination) throws XMLStreamException  {
 		SMOutputFactory outf = new SMOutputFactory(XMLOutputFactory.newInstance());
 		SMOutputDocument doc = outf.createOutputDocument(destination);
 		if (indent) {
@@ -51,13 +50,13 @@ public class MasseutsendelseWriter {
 		settings.addElementWithCharacters(namespace, "auto-godkjenn-jobb", s.autogodkjenn);
 	}
 
-	private void addDocuments(SMOutputElement standardDist, SMNamespace namespace, BrevProvider brevProvider) throws XMLStreamException {
+	private void addDocuments(SMOutputElement standardDist, SMNamespace namespace, DocumentProvider brevProvider) throws XMLStreamException {
 		SMOutputElement post = standardDist.addElement(namespace, "post");
-		Brev b = null;
-		while ((b = brevProvider.nextBrev()) != null) {
+		Document b = null;
+		while ((b = brevProvider.next()) != null) {
 			SMOutputElement brev = post.addElement(namespace, "dokument");
 			brev.addElement(namespace, "id").addCharacters(b.getDokumentId());
-			brev.addElement(namespace, "fil").addCharacters(b.brevFil);
+			brev.addElement(namespace, "fil").addCharacters(b.inneholdFil);
 			SMOutputElement innstillinger = brev.addElement(namespace, "innstillinger");
 			innstillinger.addElement(namespace, "emne").addCharacters(b.emne);
 			innstillinger.addElement(namespace, "sms-varsling");
@@ -66,10 +65,10 @@ public class MasseutsendelseWriter {
 		}
 	}
 
-	private void addBrev(SMOutputElement standardDist, SMNamespace namespace, BrevProvider brevProvider) throws XMLStreamException {
+	private void addBrev(SMOutputElement standardDist, SMNamespace namespace, DocumentProvider brevProvider) throws XMLStreamException {
 		SMOutputElement forsendelser = standardDist.addElement(namespace, "forsendelser");
-		Brev b = null;
-		while ((b = brevProvider.nextBrev()) != null) {
+		Document b = null;
+		while ((b = brevProvider.next()) != null) {
 			SMOutputElement brev = forsendelser.addElement(namespace, "brev");
 			brev.addElement(namespace, "id").addCharacters(b.id);
 			

@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SftpReceipt {
+	
 	private static final Pattern RECEIPT_PATTERN = Pattern.compile("(.*/)?(.*).resultat.\\d{8}-\\d{9}.zip");
 
 	private String originalFilename;

@@ -9,7 +9,7 @@ import java.util.List;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchLogger;
-import no.bekk.java.dpostbatch.pack.CSVBrevProvider;
+import no.bekk.java.dpostbatch.pack.CsvDocumentProvider;
 
 import com.google.common.base.CharMatcher;
 
@@ -49,7 +49,7 @@ public class ValidateBatchTask {
 	}
 
 	private void validateLine(String line, int index, Validation validation) {
-		int occurences = CharMatcher.is(CSVBrevProvider.SEPARATOR).countIn(line);
+		int occurences = CharMatcher.is(CsvDocumentProvider.SEPARATOR).countIn(line);
 		if (occurences != 4) {
 			validation.addError("Line " + index + " has wrong number of columns: " + occurences);
 		}

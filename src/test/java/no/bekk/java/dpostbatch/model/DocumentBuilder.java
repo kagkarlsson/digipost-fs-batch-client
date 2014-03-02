@@ -1,6 +1,6 @@
 package no.bekk.java.dpostbatch.model;
 
-public class BrevBuilder {
+public class DocumentBuilder {
 
 	private String id = "id1";
 	private String kundeId = "kundeid1";
@@ -8,18 +8,18 @@ public class BrevBuilder {
 	private String emne = "Hej";
 	private String brevFil = "file.pdf";
 
-	private BrevBuilder() {
+	private DocumentBuilder() {
 	}
 	
-	public static BrevBuilder newBrev() {
-		return new BrevBuilder();
+	public static DocumentBuilder newDocument() {
+		return new DocumentBuilder();
 	}
 	
-	public Brev build() {
-		return new Brev(id, kundeId, foedselsnummer, emne, brevFil);
+	public Document build() {
+		return new Document(id, kundeId, foedselsnummer, emne, brevFil);
 	}
 
-	public BrevBuilder withFile(String file) {
+	public DocumentBuilder withFile(String file) {
 		this.brevFil = file;
 		return this;
 	}

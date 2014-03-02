@@ -19,8 +19,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import no.bekk.java.dpostbatch.model.BatchSettings;
-import no.bekk.java.dpostbatch.model.Brev;
-import no.bekk.java.dpostbatch.model.BrevProvider;
+import no.bekk.java.dpostbatch.model.Document;
 import no.bekk.java.dpostbatch.pack.MasseutsendelseWriter;
 
 import org.codehaus.stax2.validation.XMLValidationSchema;
@@ -33,10 +32,10 @@ public class MasseutsendelseWriterTest {
 	@Test
 	public void writeMasseutsendelse() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Brev b1 = new Brev("id1", "kunde-id1", "01010112345", "emne", "fil1.pdf");
-		Brev b2 = new Brev("id2", "kunde-id2", "02020212345", "emne", "fil2.pdf");
+		Document b1 = new Document("id1", "kunde-id1", "01010112345", "emne", "fil1.pdf");
+		Document b2 = new Document("id2", "kunde-id2", "02020212345", "emne", "fil2.pdf");
 		new MasseutsendelseWriter(true).write(new BatchSettings("1000", "jobb-id", "jobb-navn", "false"),
-				new TestableBrevProvider(b1, b2), out);
+				new MockDocumentProvider(b1, b2), out);
 
 		String expected = CharStreams.toString(new InputStreamReader(getClass().getResourceAsStream("/masseutsendelse.xml")));
 		
@@ -62,18 +61,18 @@ public class MasseutsendelseWriterTest {
 		}
 	}
 
-	public static class TestableBrevProvider implements BrevProvider {
+	public static class MockDocumentProvider implements DocumentProvider {
 
-		private Brev[] brev;
+		private Document[] documents;
 		int counter = 0;
 
-		public TestableBrevProvider(Brev... brev) {
-			this.brev = brev;
+		public MockDocumentProvider(Document... brev) {
+			this.documents = brev;
 		}
 
-		public Brev nextBrev() {
-			if (brev.length > counter) {
-				return brev[counter++];
+		public Document next() {
+			if (documents.length > counter) {
+				return documents[counter++];
 			} else {
 				return null;
 			}

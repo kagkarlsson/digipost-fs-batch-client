@@ -1,22 +1,20 @@
 package no.bekk.java.dpostbatch.pack;
 
-import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import no.bekk.java.dpostbatch.model.Document;
 import au.com.bytecode.opencsv.CSVReader;
-import no.bekk.java.dpostbatch.model.Brev;
-import no.bekk.java.dpostbatch.model.BrevProvider;
 
-public class CSVBrevProvider implements BrevProvider, Closeable {
+public class CsvDocumentProvider implements DocumentProvider {
 
 	public static final char SEPARATOR = ';';
 	private Path lettersFile;
 	private CSVReader csvReader;
 
-	public CSVBrevProvider(Path lettersFile) {
+	public CsvDocumentProvider(Path lettersFile) {
 		this.lettersFile = lettersFile;
 		initReader(lettersFile);
 	}
@@ -30,13 +28,13 @@ public class CSVBrevProvider implements BrevProvider, Closeable {
 	}
 
 	@Override
-	public Brev nextBrev() {
+	public Document next() {
 		try {
 			String[] line = csvReader.readNext();
 			if (line == null) {
 				return null;
 			}
-			return new Brev(get(line, 0), get(line,1), get(line,2), get(line,3), get(line, 4));
+			return new Document(get(line, 0), get(line,1), get(line,2), get(line,3), get(line, 4));
 		} catch (IOException e) {
 			throw new RuntimeException("Error while reading csv " + lettersFile, e);
 		}
@@ -48,6 +46,7 @@ public class CSVBrevProvider implements BrevProvider, Closeable {
 
 	@Override
 	public void reset() {
+		close();
 		initReader(lettersFile);
 	}
 

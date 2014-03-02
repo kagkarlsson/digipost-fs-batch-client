@@ -1,17 +1,17 @@
 package no.bekk.java.dpostbatch.model;
 
-public class Brev {
+public class Document {
 
 	public String id;
 	public String foedselsnummer;
-	public String brevFil;
+	public String inneholdFil;
 	public String emne;
 	public String kundeId;
 
 	
-	public Brev(String id, String kundeId, String foedselsnummer, String emne, String brevFil) {
+	public Document(String id, String kundeId, String foedselsnummer, String emne, String inneholdFil) {
 		this.id = id;
-		this.brevFil = brevFil;
+		this.inneholdFil = inneholdFil;
 		this.emne = emne;
 		this.kundeId = kundeId;
 		this.foedselsnummer = foedselsnummer;

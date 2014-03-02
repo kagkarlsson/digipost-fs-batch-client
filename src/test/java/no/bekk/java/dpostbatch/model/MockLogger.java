@@ -1,4 +1,4 @@
-package no.bekk.java.dpostbatch.task;
+package no.bekk.java.dpostbatch.model;
 
 import java.util.ArrayList;
 import java.util.List;

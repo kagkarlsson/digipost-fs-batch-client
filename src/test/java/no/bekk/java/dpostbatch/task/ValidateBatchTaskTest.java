@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import no.bekk.java.dpostbatch.model.Batch;
 import no.bekk.java.dpostbatch.model.BatchBuilder;
+import no.bekk.java.dpostbatch.model.MockLogger;
 import no.bekk.java.dpostbatch.task.send.ValidateBatchTask;
 
 import org.junit.Before;

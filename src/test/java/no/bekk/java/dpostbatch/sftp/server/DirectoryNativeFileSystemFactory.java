@@ -14,9 +14,6 @@ public class DirectoryNativeFileSystemFactory implements FileSystemFactory {
 		this.home = home;
 	}
 
-	/**
-	 * Create the appropriate user file system view.
-	 */
 	public FileSystemView createFileSystemView(Session session) {
 		String userName = session.getUsername();
 		if (!home.exists() && !home.mkdirs()) {
